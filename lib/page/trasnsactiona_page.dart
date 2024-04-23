@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(TransaksiPage());
@@ -20,6 +21,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
     "Lainnnya"
   ];
   late String dropDowmValue = list.first;
+  TextEditingController dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
       body: SingleChildScrollView(
         child: SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -69,16 +71,12 @@ class _TransaksiPageState extends State<TransaksiPage> {
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
               ),
             ),
-            
             Padding(
-              padding: EdgeInsets.all(15),
-              child: 
-              Text("Category", 
-              style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 15),
-                )
-              ),
-
+                padding: EdgeInsets.all(15),
+                child: Text(
+                  "Category",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                )),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: DropdownButton<String>(
@@ -97,11 +95,29 @@ class _TransaksiPageState extends State<TransaksiPage> {
                 },
               ),
             ),
-
-            TextField(
-              decoration: InputDecoration(labelText: "Enter Date"),
-              onTap: () {},
-            )
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                readOnly: true,
+                controller: dateController,
+                decoration: InputDecoration(labelText: "Enter Date", labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                onTap: () async {
+                  DateTime? pickeDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2099),
+                      // locale: Locale('id', 'ID'),
+                    );
+                  if (pickeDate != null) {
+                    String formatDate = DateFormat("yyyy-mm-dd").format(pickeDate);
+                    dateController.text = formatDate;
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: 15,),
+            Center(child: ElevatedButton(onPressed: (){}, child: Text("SAVE"),))
           ],
         )),
       ),
